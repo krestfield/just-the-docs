@@ -21,20 +21,23 @@
   @include mq(lg) {
     width: calc((100% - #{$nav-width + $content-width}) / 2 + #{$nav-width});
     min-width: $nav-width;
+    max-width: 350px;
   }
 }
 
 .main {
   @include mq(md) {
     position: relative;
-    max-width: $content-width;
+    // max-width: $content-width;
+    max-width: 1000px;
     margin-left: $nav-width-md;
   }
 
   @include mq(lg) {
-    margin-left: calc(
+    // 350px should probably be replaced with a variable so .side-bar max-width and .main margin-left max are the same
+    margin-left: min(calc(
       (100% - #{$nav-width + $content-width}) / 2 + #{$nav-width}
-    );
+    ), 350px);
   }
 }
 
