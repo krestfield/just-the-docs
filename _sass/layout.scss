@@ -35,9 +35,7 @@
 
   @include mq(lg) {
     // 350px should probably be replaced with a variable so .side-bar max-width and .main margin-left max are the same
-    margin-left: min(
-      100% - #{$nav-width + $content-width}) / 2 + #{$nav-width}
-    , 350px);
+    margin-left: min((100% - #{$nav-width + $content-width}) / 2 + #{$nav-width}, 350px);
   }
 }
 
