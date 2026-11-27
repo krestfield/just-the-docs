@@ -1,5 +1,8 @@
-{%- comment -%} Krestfield: top bar with logo, search and links. Uses #main-header and #menu-button (needed by just-the-docs.js). {%- endcomment -%}
-<header class="kf-topbar">
+{%- comment -%}
+  Krestfield: top bar with logo, search and links. Uses #main-header and #menu-button (needed by just-the-docs.js).
+  {% include kf/topbar.html nosearch=true %} leaves the search out (the home page has it in the hero).
+{%- endcomment -%}
+<header class="kf-topbar{% if include.nosearch %} kf-topbar-nosearch{% endif %}">
   <div class="kf-topbar-in">
     <button id="menu-button" class="kf-iconbtn kf-menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">{% include kf/icon.html name="menu" %}</button>
     <a class="kf-brand" href="{{ '/' | relative_url }}">
@@ -10,12 +13,14 @@
       {%- endif -%}
       <span class="kf-brand-docs">Docs</span>
     </a>
+    {%- unless include.nosearch -%}
     <div id="main-header" class="kf-search">
       {%- if site.search_enabled != false -%}
         {% include components/search_header.html %}
         {%- if site.search.focus_shortcut_key -%}<kbd class="kf-kbd" aria-hidden="true">Ctrl {{ site.search.focus_shortcut_key | upcase }}</kbd>{%- endif -%}
       {%- endif -%}
     </div>
+    {%- endunless -%}
     <nav class="kf-toplinks" aria-label="Krestfield links">
       {%- for link in site.data.krestfield.header_links -%}
         {%- assign ext = link.url | slice: 0, 4 -%}

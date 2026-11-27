@@ -1,1 +1,2 @@
-Search {{site.title}}
+{%- comment -%} Krestfield: the home page's large search box has its own wording {%- endcomment -%}
+{%- if page.layout == 'landing' -%}Search the docs, error messages or API{%- else -%}Search {{site.title}}{%- endif -%}

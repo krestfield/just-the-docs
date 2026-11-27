@@ -126,7 +126,7 @@
       }
     }
 
-    // ---- Home page: hero search box and popular-search chips use the main search
+    // ---- Home page: popular-search chips run a search in the search box
     var input = document.getElementById('search-input');
     function runSearch(q) {
       if (!input) return;
@@ -137,8 +137,6 @@
         input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
       }
     }
-    var hero = document.getElementById('kf-hero-search');
-    if (hero) hero.addEventListener('click', function () { runSearch(); });
     document.querySelectorAll('.kf-chip[data-search]').forEach(function (chip) {
       chip.addEventListener('click', function () { runSearch(chip.getAttribute('data-search')); });
     });
