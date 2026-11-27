@@ -81,6 +81,8 @@ function initSearch() {
         this.ref('id');
         this.field('title', { boost: 200 });
         this.field('content', { boost: 2 });
+        // Product and section, so e.g. "ezsign tls" ranks EzSign pages first
+        this.field('breadcrumb', { boost: 10 });
         {%- if site.search.rel_url != false %}
         this.field('relUrl');
         {%- endif %}
@@ -91,6 +93,7 @@ function initSearch() {
             id: i,
             title: docs[i].title,
             content: docs[i].content,
+            breadcrumb: docs[i].breadcrumb || '',
             {%- if site.search.rel_url != false %}
             relUrl: docs[i].relUrl
             {%- endif %}
@@ -216,6 +219,13 @@ function searchLoaded(index, docs) {
       var resultTitle = document.createElement('div');
       resultTitle.classList.add('search-result-title');
       resultLink.appendChild(resultTitle);
+
+      if (doc.breadcrumb) {
+        var resultBreadcrumb = document.createElement('div');
+        resultBreadcrumb.classList.add('search-result-breadcrumb');
+        resultBreadcrumb.textContent = doc.breadcrumb;
+        resultTitle.appendChild(resultBreadcrumb);
+      }
 
       var resultDoc = document.createElement('div');
       resultDoc.classList.add('search-result-doc');

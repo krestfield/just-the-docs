@@ -180,6 +180,13 @@
   }
 }
 
+.search-result-breadcrumb {
+  margin-left: #{$sp-4 + $sp-2};
+  color: $search-result-preview-color;
+  word-wrap: break-word;
+  @include fs-2;
+}
+
 .search-result-section {
   margin-left: #{$sp-4 + $sp-2};
   word-wrap: break-word;
