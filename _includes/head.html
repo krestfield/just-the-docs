@@ -21,7 +21,8 @@
     original sidebar, which the Krestfield layout replaces, so they are omitted.
   {%- endcomment -%}
   <script>
-    // Krestfield: apply a saved light/dark choice before the page is drawn
+    /* Krestfield: apply a saved light/dark choice before the page is drawn.
+       (Use block comments only: the theme puts each page's HTML on one line.) */
     try { var kfTheme = localStorage.getItem('kf-theme'); if (kfTheme === 'dark' || kfTheme === 'light') document.documentElement.setAttribute('data-theme', kfTheme); } catch (e) {}
   </script>
   <link rel="preload" href="{{ '/assets/fonts/ibm-plex-sans-latin-400-normal.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
