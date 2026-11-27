@@ -141,6 +141,24 @@
       chip.addEventListener('click', function () { runSearch(chip.getAttribute('data-search')); });
     });
 
+    // ---- Analytics: record what people search for (only when GoatCounter is set up).
+    // A search is recorded once the visitor stops typing for 2 seconds; searches
+    // that find nothing are labelled so gaps in the docs stand out.
+    var searchBox = document.getElementById('search-input');
+    if (searchBox) {
+      var searchTimer = null, lastSearch = '';
+      searchBox.addEventListener('keyup', function () {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(function () {
+          var q = searchBox.value.trim().toLowerCase().replace(/\s+/g, ' ');
+          if (q.length < 3 || q === lastSearch || !window.goatcounter || !window.goatcounter.count) return;
+          lastSearch = q;
+          var none = !!document.querySelector('#search-results .search-no-result');
+          window.goatcounter.count({ path: 'search: ' + q, title: none ? 'Search (no results)' : 'Search', event: true });
+        }, 2000);
+      });
+    }
+
     // ---- Small screens: when the menu opens, show the current page in it
     var sideNav = document.getElementById('site-nav');
     var menuButton = document.getElementById('menu-button');

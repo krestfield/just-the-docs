@@ -55,6 +55,10 @@
   <link rel="apple-touch-icon" href="{{ site.data.krestfield.apple_touch_icon | relative_url }}">
   {%- endif %}
   <meta name="theme-color" content="#0a192f">
+  {%- if site.goatcounter %}
+  {%- comment -%} Krestfield: GoatCounter analytics (no cookies). Set `goatcounter: <code>` in _config.yml. {%- endcomment -%}
+  <script data-goatcounter="https://{{ site.goatcounter }}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+  {%- endif %}
 
   {%- comment -%}
     Krestfield: page title with the product it belongs to, e.g.
