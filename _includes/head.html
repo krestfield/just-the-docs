@@ -46,7 +46,21 @@
 
   {% include_cached favicon.html %}
 
-  {% seo %}
+  {%- comment -%}
+    Krestfield: page title with the product it belongs to, e.g.
+    "TLS Configuration - EzSign | Krestfield Knowledge".
+    jekyll-seo-tag still writes the other meta tags.
+  {%- endcomment -%}
+  {%- assign title_product = page.grand_parent | default: page.parent -%}
+  {%- capture page_full_title -%}
+    {%- if page.title -%}
+      {{ page.title }}{% if title_product %} - {{ title_product }}{% endif %} | {{ site.title }}
+    {%- else -%}
+      {{ site.title }}
+    {%- endif -%}
+  {%- endcapture %}
+  <title>{{ page_full_title | escape }}</title>
+  {% seo title=false %}
 
   {% include head_custom.html %}
 
