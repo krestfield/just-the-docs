@@ -5,8 +5,10 @@ layout: table_wrappers
   Krestfield home page. Content comes from the page's front matter:
     hero: { eyebrow, title, text }
     popular_searches: [ "Install Certdog", ... ]
+    popular_searches_label: label shown before them (default "Common topics")
     products: [ { title, url, icon, description, links: [ { title, url } ] } ]
     guides: [ { title, url, product } ]
+    guides_title: heading for the guides box (default "Popular guides")
     support: { title, text, button: { title, url }, link: { title, url } }
   The first three security advisories are listed automatically (children of
   "Security Advisories", in the same order as that section's menu).
@@ -36,7 +38,7 @@ layout: table_wrappers
           {%- if site.search.focus_shortcut_key -%}<kbd class="kf-kbd" aria-hidden="true">Ctrl {{ site.search.focus_shortcut_key | upcase }}</kbd>{%- endif -%}
         </div>
         {%- if page.popular_searches -%}
-        <div class="kf-chips"><span>Popular:</span>
+        <div class="kf-chips"><span>{{ page.popular_searches_label | default: "Common topics" }}:</span>
           {%- for q in page.popular_searches -%}<button type="button" class="kf-chip" data-search="{{ q | escape }}">{{ q }}</button>{%- endfor -%}
         </div>
         {%- endif -%}
@@ -68,7 +70,7 @@ layout: table_wrappers
       <div class="kf-home-row">
         {%- if page.guides -%}
         <section class="kf-box" aria-labelledby="kf-guides-h">
-          <h2 id="kf-guides-h">Popular guides</h2>
+          <h2 id="kf-guides-h">{{ page.guides_title | default: "Popular guides" }}</h2>
           <ul class="kf-list">
             {%- for g in page.guides -%}<li><a href="{{ g.url | relative_url }}">{{ g.title }}</a><small>{{ g.product }}</small></li>{%- endfor -%}
           </ul>
