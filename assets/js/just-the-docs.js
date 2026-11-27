@@ -437,6 +437,9 @@ function searchLoaded(index, docs) {
   const updateSearchFocus = function(evt) {
     const nextFocusedElement = evt.relatedTarget;
 
+    // Krestfield: focus moved to nothing in particular (e.g. a click on the page)
+    if (!nextFocusedElement) { hideSearch(); return; }
+
     // Re-focusing on search bar - "keep focus"
     if (nextFocusedElement.id === 'search-input') return;
 
