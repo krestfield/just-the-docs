@@ -1,0 +1,17 @@
+{%- comment -%}
+  Krestfield: work out which product (top-level section) a page belongs to.
+  Assigns kf_product (a page) or nil. Top-level pages with children are products.
+{%- endcomment -%}
+{%- assign kf_product = nil -%}
+{%- if page.grand_parent -%}
+  {%- assign kf_product_title = page.grand_parent -%}
+{%- elsif page.parent -%}
+  {%- assign kf_product_title = page.parent -%}
+{%- elsif page.has_children -%}
+  {%- assign kf_product_title = page.title -%}
+{%- else -%}
+  {%- assign kf_product_title = nil -%}
+{%- endif -%}
+{%- if kf_product_title -%}
+  {%- assign kf_product = site.html_pages | where: "title", kf_product_title | where_exp: "p", "p.parent == nil" | first -%}
+{%- endif -%}

@@ -1,0 +1,14 @@
+{%- comment -%}
+  Krestfield: product tabs. Cached per active product:
+  {% include_cached kf/tabs.html active="Certdog" %}
+{%- endcomment -%}
+{%- assign kf_tops = site.html_pages | where_exp: "p", "p.parent == nil" | where_exp: "p", "p.has_children == true" | where_exp: "p", "p.nav_exclude != true" -%}
+{%- include components/nav/sorted.html pages=kf_tops -%}
+<nav class="kf-tabs" aria-label="Products">
+  <div class="kf-tabs-in">
+    <a href="{{ '/' | relative_url }}"{% if include.active == "" %} class="is-active" aria-current="page"{% endif %}>Overview</a>
+    {%- for p in nav_sorted -%}
+    <a href="{{ p.url | relative_url }}"{% if include.active == p.title %} class="is-active"{% endif %}>{% include kf/icon.html name=p.icon %}<span>{{ p.title }}</span></a>
+    {%- endfor -%}
+  </div>
+</nav>

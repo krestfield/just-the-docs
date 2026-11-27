@@ -1,0 +1,34 @@
+{%- comment -%}
+  Krestfield: previous / next page within the current product, in sidebar order.
+  Requires kf_product (from kf/product.html).
+{%- endcomment -%}
+{%- if kf_product -%}
+  {%- assign seq = "" | split: "" | push: kf_product -%}
+  {%- assign tops = site.html_pages | where: "parent", kf_product.title | where_exp: "p", "p.grand_parent == nil" | where_exp: "p", "p.nav_exclude != true" -%}
+  {%- include components/nav/sorted.html pages=tops -%}
+  {%- assign tops = nav_sorted -%}
+  {%- for t in tops -%}
+    {%- assign seq = seq | push: t -%}
+    {%- if t.has_children -%}
+      {%- assign gs = site.html_pages | where: "parent", t.title | where: "grand_parent", kf_product.title | where_exp: "p", "p.nav_exclude != true" -%}
+      {%- include components/nav/sorted.html pages=gs -%}
+      {%- assign seq = seq | concat: nav_sorted -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- assign kf_prev = nil -%}{%- assign kf_next = nil -%}
+  {%- for s in seq -%}
+    {%- if s.url == page.url -%}
+      {%- assign pi = forloop.index0 | minus: 1 -%}
+      {%- assign ni = forloop.index0 | plus: 1 -%}
+      {%- if pi >= 0 -%}{%- assign kf_prev = seq[pi] -%}{%- endif -%}
+      {%- assign kf_next = seq[ni] -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if kf_prev or kf_next -%}
+<nav class="kf-pn" aria-label="Previous and next pages">
+  {%- if kf_prev -%}<a class="kf-pn-prev" href="{{ kf_prev.url | relative_url }}" rel="prev"><small>Previous</small><b>{% include kf/icon.html name="arrow-left" %}{{ kf_prev.title }}</b></a>{%- else -%}<span></span>{%- endif -%}
+  {%- if kf_next -%}<a class="kf-pn-next" href="{{ kf_next.url | relative_url }}" rel="next"><small>Next</small><b>{{ kf_next.title }}{% include kf/icon.html name="arrow-right" %}</b></a>{%- endif -%}
+</nav>
+  {%- endif -%}
+{%- endif -%}

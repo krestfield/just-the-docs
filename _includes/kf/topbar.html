@@ -1,0 +1,27 @@
+{%- comment -%} Krestfield: top bar with logo, search and links. Uses #main-header and #menu-button (needed by just-the-docs.js). {%- endcomment -%}
+<header class="kf-topbar">
+  <div class="kf-topbar-in">
+    <button id="menu-button" class="kf-iconbtn kf-menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">{% include kf/icon.html name="menu" %}</button>
+    <a class="kf-brand" href="{{ '/' | relative_url }}">
+      {%- if site.data.krestfield.logo_on_dark -%}
+      <img src="{{ site.data.krestfield.logo_on_dark | relative_url }}" alt="{{ site.data.krestfield.company | default: site.title }}" width="168" height="16">
+      {%- else -%}
+      <span class="kf-brand-text">{{ site.title }}</span>
+      {%- endif -%}
+      <span class="kf-brand-docs">Docs</span>
+    </a>
+    <div id="main-header" class="kf-search">
+      {%- if site.search_enabled != false -%}
+        {% include components/search_header.html %}
+        {%- if site.search.focus_shortcut_key -%}<kbd class="kf-kbd" aria-hidden="true">Ctrl {{ site.search.focus_shortcut_key | upcase }}</kbd>{%- endif -%}
+      {%- endif -%}
+    </div>
+    <nav class="kf-toplinks" aria-label="Krestfield links">
+      {%- for link in site.data.krestfield.header_links -%}
+        {%- assign ext = link.url | slice: 0, 4 -%}
+        <a href="{% if ext == 'http' %}{{ link.url }}{% else %}{{ link.url | relative_url }}{% endif %}" class="{% if link.button %}kf-toplink-btn{% endif %}"{% if ext == 'http' %} target="_blank" rel="noopener"{% endif %}>{{ link.title }}{% if ext == 'http' %} {% include kf/icon.html name="external" class="kf-icon-sm" %}{% endif %}</a>
+      {%- endfor -%}
+      <button type="button" class="kf-iconbtn kf-theme-btn" id="kf-theme-toggle" aria-label="Switch between light and dark mode" title="Switch between light and dark mode">{% include kf/icon.html name="moon" class="kf-when-light" %}{% include kf/icon.html name="sun" class="kf-when-dark" %}</button>
+    </nav>
+  </div>
+</header>

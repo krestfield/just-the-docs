@@ -1,0 +1,27 @@
+// Krestfield colour scheme (light values).
+// Dark mode is handled with CSS custom properties in _sass/custom/custom.scss,
+// because several theme styles run colour functions on these variables.
+
+$kf-navy: #0a192f;
+$kf-plum: #3b2050;
+$kf-mauve: #8e7997;
+$kf-accent: #5a2d82;
+
+$color-scheme: light;
+$body-background-color: #ffffff;
+$body-heading-color: #161a26;
+$body-text-color: #3a4052;
+$link-color: $kf-accent;
+$nav-child-link-color: #4a5063;
+$sidebar-color: #fafafc;
+$border-color: #e4e2ea;
+$base-button-color: #f6f5f8;
+$btn-primary-color: $kf-plum;
+$code-background-color: #0f1b2e;
+$table-background-color: #ffffff;
+$search-background-color: #ffffff;
+$search-result-preview-color: #6b7183;
+$feedback-color: #f3f1f6;
+
+// Code blocks are dark in both light and dark mode
+@import "./vendor/accessible-pygments/github-dark";

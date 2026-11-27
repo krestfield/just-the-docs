@@ -1,0 +1,17 @@
+{%- comment -%} Krestfield: breadcrumbs from parent / grand_parent. {%- endcomment -%}
+{%- if page.parent -%}
+<nav class="kf-crumbs" aria-label="Breadcrumb">
+  <ol>
+  {%- if page.grand_parent -%}
+    {%- assign gp = site.html_pages | where: "title", page.grand_parent | where_exp: "p", "p.parent == nil" | first -%}
+    {%- assign pp = site.html_pages | where: "title", page.parent | where: "parent", page.grand_parent | first -%}
+    <li><a href="{{ gp.url | relative_url }}">{{ page.grand_parent }}</a></li>
+    <li><a href="{{ pp.url | relative_url }}">{{ page.parent }}</a></li>
+  {%- else -%}
+    {%- assign pp = site.html_pages | where: "title", page.parent | where_exp: "p", "p.parent == nil" | first -%}
+    <li><a href="{{ pp.url | relative_url }}">{{ page.parent }}</a></li>
+  {%- endif -%}
+    <li aria-current="page">{{ page.title }}</li>
+  </ol>
+</nav>
+{%- endif -%}

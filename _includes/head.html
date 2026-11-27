@@ -16,11 +16,16 @@
 
   <link rel="stylesheet" href="{{ '/assets/css/just-the-docs-default.css' | relative_url }}">
 
-  <link rel="stylesheet" href="{{ '/assets/css/just-the-docs-head-nav.css' | relative_url }}" id="jtd-head-nav-stylesheet">
-
-  <style id="jtd-nav-activation">
-  {% include css/activation.scss.liquid %}
-  </style>
+  {%- comment -%}
+    Krestfield: the head-nav and activation stylesheets only serve the theme's
+    original sidebar, which the Krestfield layout replaces, so they are omitted.
+  {%- endcomment -%}
+  <script>
+    // Krestfield: apply a saved light/dark choice before the page is drawn
+    try { var kfTheme = localStorage.getItem('kf-theme'); if (kfTheme === 'dark' || kfTheme === 'light') document.documentElement.setAttribute('data-theme', kfTheme); } catch (e) {}
+  </script>
+  <link rel="preload" href="{{ '/assets/fonts/ibm-plex-sans-latin-400-normal.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ '/assets/fonts/ibm-plex-sans-latin-600-normal.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
 
   {% if site.ga_tracking != nil %}
     {% assign ga_tracking_ids = site.ga_tracking | split: "," %}
@@ -45,6 +50,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   {% include_cached favicon.html %}
+  {%- if site.data.krestfield.apple_touch_icon %}
+  <link rel="apple-touch-icon" href="{{ site.data.krestfield.apple_touch_icon | relative_url }}">
+  {%- endif %}
+  <meta name="theme-color" content="#0a192f">
 
   {%- comment -%}
     Krestfield: page title with the product it belongs to, e.g.

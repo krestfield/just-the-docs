@@ -1,0 +1,33 @@
+{%- comment -%}
+  Krestfield: cards for a page's child pages (section and product landing pages).
+  On a product page each section card lists its first few pages.
+{%- endcomment -%}
+{%- if page.parent -%}
+  {%- assign kids = site.html_pages | where: "parent", page.title | where: "grand_parent", page.parent | where_exp: "p", "p.nav_exclude != true" -%}
+{%- else -%}
+  {%- assign kids = site.html_pages | where: "parent", page.title | where_exp: "p", "p.grand_parent == nil" | where_exp: "p", "p.nav_exclude != true" -%}
+{%- endif -%}
+{%- include components/nav/sorted.html pages=kids -%}
+{%- assign kids = nav_sorted -%}
+{%- if kids.size > 0 -%}
+<section class="kf-children" aria-labelledby="kf-children-h">
+  <h2 id="kf-children-h" class="kf-children-title">{% if page.parent %}In this section{% else %}Sections{% endif %}</h2>
+  <div class="kf-cards">
+  {%- for k in kids -%}
+    {%- if page.parent == nil and k.has_children -%}
+      {%- assign gk = site.html_pages | where: "parent", k.title | where: "grand_parent", page.title | where_exp: "p", "p.nav_exclude != true" -%}
+      {%- include components/nav/sorted.html pages=gk -%}
+    <div class="kf-card kf-card-sec">
+      <a class="kf-card-title" href="{{ k.url | relative_url }}">{{ k.title }}</a>
+      <ul>
+        {%- for g in nav_sorted limit: 4 -%}<li><a href="{{ g.url | relative_url }}">{{ g.title }}</a></li>{%- endfor -%}
+      </ul>
+      {%- if nav_sorted.size > 4 -%}<a class="kf-card-more" href="{{ k.url | relative_url }}">All {{ nav_sorted.size }} pages</a>{%- endif -%}
+    </div>
+    {%- else -%}
+    <a class="kf-card kf-card-link" href="{{ k.url | relative_url }}"><span>{{ k.title }}</span>{% include kf/icon.html name="arrow-right" %}</a>
+    {%- endif -%}
+  {%- endfor -%}
+  </div>
+</section>
+{%- endif -%}

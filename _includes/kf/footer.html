@@ -1,0 +1,34 @@
+{%- comment -%} Krestfield: site footer. Content comes from _data/krestfield.yml in the site. {%- endcomment -%}
+{%- assign kf = site.data.krestfield -%}
+<footer class="kf-footer">
+  <div class="kf-footer-in">
+    <div class="kf-footer-grid">
+      <div class="kf-footer-brand">
+        {%- if site.data.krestfield.logo_on_dark -%}<img src="{{ site.data.krestfield.logo_on_dark | relative_url }}" alt="{{ kf.company | default: site.title }}" width="168" height="16">{%- endif -%}
+        {%- if kf.tagline -%}<p>{{ kf.tagline }}</p>{%- endif -%}
+        <div class="kf-rule"></div>
+        {%- if kf.social -%}
+        <div class="kf-social">
+          {%- for s in kf.social -%}<a href="{{ s.url }}" target="_blank" rel="noopener" aria-label="{{ s.name }}" title="{{ s.name }}">{% include kf/icon.html name=s.icon %}</a>{%- endfor -%}
+        </div>
+        {%- endif -%}
+      </div>
+      {%- for col in kf.footer_columns -%}
+      <div>
+        <h2>{{ col.title }}</h2>
+        <ul>
+          {%- for l in col.links -%}
+          {%- assign ext = l.url | slice: 0, 4 -%}
+          {%- assign mail = l.url | slice: 0, 7 -%}
+          <li><a href="{% if ext == 'http' or mail == 'mailto:' %}{{ l.url }}{% else %}{{ l.url | relative_url }}{% endif %}"{% if ext == 'http' %} target="_blank" rel="noopener"{% endif %}>{{ l.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+      {%- endfor -%}
+    </div>
+    <div class="kf-footer-bot">
+      <span>&copy; {{ site.time | date: "%Y" }} {{ kf.company | default: site.title }}. All rights reserved.</span>
+      {%- if kf.website -%}<a href="{{ kf.website }}" target="_blank" rel="noopener">{{ kf.website | remove: "https://" | remove: "www." }}</a>{%- endif -%}
+    </div>
+  </div>
+</footer>

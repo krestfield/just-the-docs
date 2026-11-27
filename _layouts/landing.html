@@ -1,0 +1,113 @@
+---
+layout: table_wrappers
+---
+{%- comment -%}
+  Krestfield home page. Content comes from the page's front matter:
+    hero: { eyebrow, title, text }
+    popular_searches: [ "Install Certdog", ... ]
+    products: [ { title, url, icon, description, links: [ { title, url } ] } ]
+    guides: [ { title, url, product } ]
+    support: { title, text, button: { title, url }, link: { title, url } }
+  The first three security advisories are listed automatically (children of
+  "Security Advisories", in the same order as that section's menu).
+  Any Markdown in the page body is shown below the cards.
+{%- endcomment -%}
+<!DOCTYPE html>
+
+<html lang="{{ site.lang | default: 'en-GB' }}">
+{% include head.html %}
+<body class="kf kf-landing kf-no-side">
+  <a class="skip-to-main" href="#main-content">Skip to main content</a>
+  {% include icons/icons.html %}
+  {% include kf/topbar.html %}
+  {% include_cached kf/tabs.html active="" %}
+  <nav id="site-nav" class="kf-sidebar kf-sidebar-empty" aria-label="Products" hidden></nav>
+
+  <main id="main-content">
+    <section class="kf-hero">
+      <div class="kf-hero-in">
+        {%- if page.hero.eyebrow -%}<p class="kf-eyebrow">{{ page.hero.eyebrow }}</p>{%- endif -%}
+        <h1>{{ page.hero.title | default: page.title }}</h1>
+        <div class="kf-rule"></div>
+        {%- if page.hero.text -%}<p class="kf-hero-text">{{ page.hero.text }}</p>{%- endif -%}
+        {%- if site.search_enabled != false -%}
+        <button type="button" class="kf-hero-search" id="kf-hero-search">
+          {% include kf/icon.html name="search" %}<span>Search the docs, error messages or API</span>{%- if site.search.focus_shortcut_key -%}<kbd>Ctrl {{ site.search.focus_shortcut_key | upcase }}</kbd>{%- endif -%}
+        </button>
+        {%- if page.popular_searches -%}
+        <div class="kf-chips"><span>Popular:</span>
+          {%- for q in page.popular_searches -%}<button type="button" class="kf-chip" data-search="{{ q | escape }}">{{ q }}</button>{%- endfor -%}
+        </div>
+        {%- endif -%}
+        {%- endif -%}
+      </div>
+    </section>
+
+    <div class="kf-home">
+      {%- if page.products -%}
+      <section aria-labelledby="kf-products-h">
+        <h2 id="kf-products-h">Products</h2>
+        <div class="kf-prod-cards">
+          {%- for p in page.products -%}
+          <div class="kf-prod-card">
+            <span class="kf-badge kf-badge-lg">{% include kf/icon.html name=p.icon %}</span>
+            <h3><a href="{{ p.url | relative_url }}">{{ p.title }}</a></h3>
+            <p>{{ p.description }}</p>
+            {%- if p.links -%}
+            <ul>
+              {%- for l in p.links -%}<li><a href="{{ l.url | relative_url }}">{{ l.title }}{% include kf/icon.html name="arrow-right" class="kf-icon-sm" %}</a></li>{%- endfor -%}
+            </ul>
+            {%- endif -%}
+          </div>
+          {%- endfor -%}
+        </div>
+      </section>
+      {%- endif -%}
+
+      <div class="kf-home-row">
+        {%- if page.guides -%}
+        <section class="kf-box" aria-labelledby="kf-guides-h">
+          <h2 id="kf-guides-h">Popular guides</h2>
+          <ul class="kf-list">
+            {%- for g in page.guides -%}<li><a href="{{ g.url | relative_url }}">{{ g.title }}</a><small>{{ g.product }}</small></li>{%- endfor -%}
+          </ul>
+        </section>
+        {%- endif -%}
+
+        {%- assign advisories = site.html_pages | where: "parent", "Security Advisories" | where_exp: "p", "p.nav_exclude != true" -%}
+        {%- include components/nav/sorted.html pages=advisories -%}
+        {%- assign advisories = nav_sorted -%}
+        {%- if advisories.size > 0 -%}
+        {%- assign adv_home = site.html_pages | where: "title", "Security Advisories" | first -%}
+        <section class="kf-box" aria-labelledby="kf-adv-h">
+          <h2 id="kf-adv-h">Security advisories</h2>
+          <ul class="kf-list">
+            {%- for a in advisories limit: 3 -%}<li><a href="{{ a.url | relative_url }}">{{ a.title }}</a>{%- if a.last_modified -%}<small>{{ a.last_modified | date: "%-d %b %Y" }}</small>{%- endif -%}</li>{%- endfor -%}
+          </ul>
+          {%- if adv_home -%}<a class="kf-more" href="{{ adv_home.url | relative_url }}">All advisories {% include kf/icon.html name="arrow-right" class="kf-icon-sm" %}</a>{%- endif -%}
+        </section>
+        {%- endif -%}
+
+        {%- if page.support -%}
+        <section class="kf-box kf-box-support" aria-labelledby="kf-support-h">
+          <h2 id="kf-support-h">{{ page.support.title }}</h2>
+          <p>{{ page.support.text }}</p>
+          {%- if page.support.button -%}<a class="kf-btn" href="{{ page.support.button.url }}" target="_blank" rel="noopener">{{ page.support.button.title }}</a>{%- endif -%}
+          {%- if page.support.link -%}<a class="kf-btn kf-btn-ghost" href="{{ page.support.link.url }}" target="_blank" rel="noopener">{{ page.support.link.title }} {% include kf/icon.html name="external" class="kf-icon-sm" %}</a>{%- endif -%}
+        </section>
+        {%- endif -%}
+      </div>
+
+      {%- assign body = content | strip -%}
+      {%- if body != "" -%}
+      <div class="kf-home-body main-content">{{ content }}</div>
+      {%- endif -%}
+    </div>
+  </main>
+
+  {% include kf/footer.html %}
+  {% if site.search_enabled != false %}
+    {% include components/search_footer.html %}
+  {% endif %}
+</body>
+</html>

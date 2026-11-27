@@ -1,0 +1,35 @@
+{%- comment -%}
+  Krestfield: navigation for one product. Cached per product:
+  {% include_cached kf/sidebar.html product="Certdog" %}
+  Uses the class names just-the-docs.js expects (nav-list-item, nav-list-expander)
+  so the current page is highlighted and sections expand and collapse.
+{%- endcomment -%}
+{%- assign kf_p = site.html_pages | where: "title", include.product | where_exp: "p", "p.parent == nil" | first -%}
+<div class="kf-side-head">
+  <a href="{{ kf_p.url | relative_url }}" class="kf-side-prod">
+    <span class="kf-badge">{% include kf/icon.html name=kf_p.icon %}</span>
+    <span><b>{{ kf_p.title }}</b>{% if kf_p.tagline %}<small>{{ kf_p.tagline }}</small>{% endif %}</span>
+  </a>
+</div>
+{%- assign kf_children = site.html_pages | where: "parent", include.product | where_exp: "p", "p.grand_parent == nil" | where_exp: "p", "p.nav_exclude != true" -%}
+{%- include components/nav/sorted.html pages=kf_children -%}
+{%- assign kf_sorted = nav_sorted -%}
+<ul class="kf-nav">
+  {%- for c in kf_sorted -%}
+    {%- if c.has_children -%}
+      {%- assign kf_gc = site.html_pages | where: "parent", c.title | where: "grand_parent", include.product | where_exp: "p", "p.nav_exclude != true" -%}
+      {%- include components/nav/sorted.html pages=kf_gc -%}
+    <li class="nav-list-item kf-sec">
+      <a href="{{ c.url | relative_url }}" class="kf-sec-link">{{ c.title }}</a>
+      <button class="nav-list-expander kf-exp" aria-label="Toggle {{ c.title }}" aria-expanded="false">{% include kf/icon.html name="chevron" %}</button>
+      <ul>
+        {%- for g in nav_sorted -%}
+        <li class="nav-list-item"><a href="{{ g.url | relative_url }}" class="nav-list-link">{{ g.title }}</a></li>
+        {%- endfor -%}
+      </ul>
+    </li>
+    {%- else -%}
+    <li class="nav-list-item kf-leaf"><a href="{{ c.url | relative_url }}" class="nav-list-link">{{ c.title }}</a></li>
+    {%- endif -%}
+  {%- endfor -%}
+</ul>

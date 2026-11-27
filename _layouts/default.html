@@ -1,45 +1,73 @@
 ---
 layout: table_wrappers
 ---
-
+{%- comment -%}
+  Krestfield layout: top bar, product tabs, product sidebar, article,
+  "On this page" column and footer. The search component and the element IDs
+  used by just-the-docs.js (site-nav, main-header, menu-button) are kept.
+{%- endcomment -%}
+{%- include kf/product.html -%}
+{%- if kf_product -%}{%- assign kf_active = kf_product.title -%}{%- else -%}{%- assign kf_active = "" -%}{%- endif -%}
 <!DOCTYPE html>
 
-<html lang="{{ site.lang | default: 'en-US' }}">
+<html lang="{{ site.lang | default: 'en-GB' }}">
 {% include head.html %}
-<body>
+<body class="kf{% unless kf_product %} kf-no-side{% endunless %}">
   <a class="skip-to-main" href="#main-content">Skip to main content</a>
   {% include icons/icons.html %}
-  {% if page.nav_enabled == true %}
-    {% include components/sidebar.html %}
-  {% elsif layout.nav_enabled == true and page.nav_enabled == nil %}
-    {% include components/sidebar.html %}
-  {% elsif site.nav_enabled != false and layout.nav_enabled == nil and page.nav_enabled == nil %}
-    {% include components/sidebar.html %}
-  {% endif %}
-  <div class="main" id="top">
-    {% include components/header.html %}
-    <div class="main-content-wrap">
-      {% include components/breadcrumbs.html %}
-      <div id="main-content" class="main-content">
-        <main>
+  {% include kf/topbar.html %}
+  {% include_cached kf/tabs.html active=kf_active %}
+
+  <div class="kf-body">
+    {%- if kf_product -%}
+    <nav id="site-nav" class="kf-sidebar" aria-label="{{ kf_product.title }} pages">
+      {% include_cached kf/sidebar.html product=kf_product.title %}
+    </nav>
+    {%- else -%}
+    <nav id="site-nav" class="kf-sidebar kf-sidebar-empty" aria-label="Products" hidden></nav>
+    {%- endif -%}
+
+    <div id="main-content" class="kf-main main-content">
+      <main>
+        {% include kf/breadcrumbs.html %}
+        <article class="kf-article">
           {% if site.heading_anchors != false %}
             {% include vendor/anchor_headings.html html=content beforeHeading="true" anchorBody="<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><use xlink:href=\"#svg-link\"></use></svg>" anchorClass="anchor-heading" anchorAttrs="aria-labelledby=\"%html_id%\"" %}
           {% else %}
             {{ content }}
           {% endif %}
-
-          {% if page.has_toc != false %}
-            {% include components/children_nav.html %}
-          {% endif %}
-        </main>
-        {% include components/footer.html %}
-      </div>
+        </article>
+        {% if page.has_children == true and page.has_toc != false %}
+          {% include kf/children.html %}
+        {% endif %}
+        {% include kf/prevnext.html %}
+        {%- if site.gh_edit_repository and page.path -%}
+        <div class="kf-pagefoot">
+          <a href="{{ site.gh_edit_repository }}/blob/{{ site.gh_edit_branch | default: 'main' }}/{{ page.path | uri_escape }}" target="_blank" rel="noopener">Edit this page on GitHub</a>
+        </div>
+        {%- endif -%}
+      </main>
     </div>
-    {% if site.search_enabled != false %}
-      {% include components/search_footer.html %}
-    {% endif %}
+
+    <aside class="kf-rail" aria-label="On this page">
+      <div class="kf-rail-in" id="kf-toc" hidden>
+        <h2>On this page</h2>
+        <ul></ul>
+      </div>
+      {%- if site.data.krestfield.help -%}
+      <div class="kf-help">
+        <b>{{ site.data.krestfield.help.title }}</b>
+        <span>{{ site.data.krestfield.help.text }}</span>
+        <a href="{{ site.data.krestfield.help.url }}"{% if site.data.krestfield.help.url contains 'http' %} target="_blank" rel="noopener"{% endif %}>{{ site.data.krestfield.help.link }} {% include kf/icon.html name="arrow-right" class="kf-icon-sm" %}</a>
+      </div>
+      {%- endif -%}
+    </aside>
   </div>
 
+  {% include kf/footer.html %}
+  {% if site.search_enabled != false %}
+    {% include components/search_footer.html %}
+  {% endif %}
   {% if site.mermaid %}
     {% include components/mermaid.html %}
   {% endif %}
