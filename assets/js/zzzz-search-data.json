@@ -25,6 +25,12 @@ permalink: /assets/js/search-data.json
       {%- elsif page.parent -%}
         {%- assign breadcrumb = page.parent | append: '' -%}
       {%- endif -%}
+      {%- comment -%}
+        Optional `keywords:` front matter (a list or a string): extra search
+        terms for the page, e.g. synonyms or error codes not in its text.
+        Only added to the page's main entry, not to each of its sections.
+      {%- endcomment -%}
+      {%- assign page_keywords = page.keywords | join: ' ' -%}
       {%- assign page_content = page.content -%}
       {%- assign heading_level = site.search.heading_level | default: 2 -%}
       {%- for j in (2..heading_level) -%}
@@ -59,7 +65,8 @@ permalink: /assets/js/search-data.json
     "content": {{ content | replace: '</h', ' . </h' | replace: '<hr', ' . <hr' | replace: '</p', ' . </p' | replace: '<ul', ' . <ul' | replace: '</ul', ' . </ul' | replace: '<ol', ' . <ol' | replace: '</ol', ' . </ol' | replace: '</tr', ' . </tr' | replace: '<li', ' | <li' | replace: '</li', ' | </li' | replace: '</td', ' | </td' | replace: '<td', ' | <td' | replace: '</th', ' | </th' | replace: '<th', ' | <th' | strip_html | remove: 'Table of contents' | normalize_whitespace | replace: '. . .', '.' | replace: '. .', '.' | replace: '| |', '|' | append: ' ' | jsonify }},
     "url": "{{ url | absolute_url }}",
     "relUrl": "{{ url }}",
-    "breadcrumb": {{ breadcrumb | jsonify }}
+    "breadcrumb": {{ breadcrumb | jsonify }},
+    "keywords": {% if url == page.url %}{{ page_keywords | jsonify }}{% else %}""{% endif %}
   }
         {%- assign i = i | plus: 1 -%}
       {%- endfor -%}
@@ -71,7 +78,8 @@ permalink: /assets/js/search-data.json
     "content": {{ parts[0] | replace: '</h', ' . </h' | replace: '<hr', ' . <hr' | replace: '</p', ' . </p' | replace: '<ul', ' . <ul' | replace: '</ul', ' . </ul' | replace: '<ol', ' . <ol' | replace: '</ol', ' . </ol' | replace: '</tr', ' . </tr' | replace: '<li', ' | <li' | replace: '</li', ' | </li' | replace: '</td', ' | </td' | replace: '<td', ' | <td' | replace: '</th', ' | </th' | replace: '<th', ' | <th' | strip_html | remove: 'Table of contents' | normalize_whitespace | replace: '. . .', '.' | replace: '. .', '.' | replace: '| |', '|' | append: ' ' | jsonify }},
     "url": "{{ page.url | absolute_url }}",
     "relUrl": "{{ page.url }}",
-    "breadcrumb": {{ breadcrumb | jsonify }}
+    "breadcrumb": {{ breadcrumb | jsonify }},
+    "keywords": {{ page_keywords | jsonify }}
   }
         {%- assign i = i | plus: 1 -%}
       {%- endunless -%}
