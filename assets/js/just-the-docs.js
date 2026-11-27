@@ -437,8 +437,16 @@ function searchLoaded(index, docs) {
   const updateSearchFocus = function(evt) {
     const nextFocusedElement = evt.relatedTarget;
 
-    // Krestfield: focus moved to nothing in particular (e.g. a click on the page)
-    if (!nextFocusedElement) { hideSearch(); return; }
+    // Krestfield: focus moved to nothing in particular. This happens when the
+    // page is clicked, and also on iPhones/iPads when a search result is
+    // tapped (Safari doesn't focus links on tap). Wait briefly so the tap can
+    // open the result, then hide unless the search box has focus again.
+    if (!nextFocusedElement) {
+      setTimeout(function () {
+        if (document.activeElement !== searchInput) hideSearch();
+      }, 300);
+      return;
+    }
 
     // Re-focusing on search bar - "keep focus"
     if (nextFocusedElement.id === 'search-input') return;
