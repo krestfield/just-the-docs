@@ -564,7 +564,11 @@ function navLink() {
 function scrollNav() {
   const targetLink = navLink();
   if (targetLink) {
-    targetLink.scrollIntoView({ block: "center" });
+    // Krestfield: scroll only the menu to the current page. scrollIntoView
+    // also scrolled the window, which hid the product tabs on load.
+    const nav = document.getElementById('site-nav');
+    const top = targetLink.getBoundingClientRect().top - nav.getBoundingClientRect().top + nav.scrollTop;
+    nav.scrollTop = Math.max(0, top - nav.clientHeight / 2);
     targetLink.removeAttribute('href');
   }
 }

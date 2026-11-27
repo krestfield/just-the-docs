@@ -143,6 +143,20 @@
       chip.addEventListener('click', function () { runSearch(chip.getAttribute('data-search')); });
     });
 
+    // ---- Small screens: when the menu opens, show the current page in it
+    var sideNav = document.getElementById('site-nav');
+    var menuButton = document.getElementById('menu-button');
+    if (sideNav && menuButton) {
+      menuButton.addEventListener('click', function () {
+        setTimeout(function () {
+          var current = sideNav.querySelector('.kf-nav a:not([href]), .kf-nav a.active');
+          if (!current || !sideNav.classList.contains('nav-open')) return;
+          var top = current.getBoundingClientRect().top - sideNav.getBoundingClientRect().top + sideNav.scrollTop;
+          sideNav.scrollTop = Math.max(0, top - sideNav.clientHeight / 2);
+        }, 0);
+      });
+    }
+
     // ---- Small screens: close the menu when a link is chosen or Escape is pressed
     var nav = document.getElementById('site-nav');
     var menuBtn = document.getElementById('menu-button');
