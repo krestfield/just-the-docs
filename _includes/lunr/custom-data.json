@@ -1,0 +1,17 @@
+{%- comment -%}
+  Krestfield: extra fields for each search entry.
+  - breadcrumb: the product and section a page sits under, e.g.
+    "Certdog › Installation", shown above each search result
+  - keywords: the page's optional `keywords:` front matter (a list or a
+    string), added only to the page's main entry, not to each section
+  `url` is the URL of the entry being written (set by zzzz-search-data.json).
+{%- endcomment -%}
+{%- assign p = include.page -%}
+{%- assign breadcrumb = '' -%}
+{%- if p.grand_parent -%}
+  {%- assign breadcrumb = p.grand_parent | append: ' › ' | append: p.parent -%}
+{%- elsif p.parent -%}
+  {%- assign breadcrumb = p.parent | append: '' -%}
+{%- endif -%}
+"breadcrumb": {{ breadcrumb | jsonify }},
+    "keywords": {% if url == p.url %}{{ p.keywords | join: ' ' | jsonify }}{% else %}""{% endif %},

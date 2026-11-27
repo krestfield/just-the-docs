@@ -106,6 +106,9 @@ function initSearch() {
         this.ref('id');
         this.field('title', { boost: 200 });
         this.field('content', { boost: 2 });
+        // Krestfield: product/section and `keywords:` front matter
+        this.field('breadcrumb', { boost: 10 });
+        this.field('keywords', { boost: 100 });
         {%- if site.search.rel_url != false %}
         this.field('relUrl');
         {%- endif %}
@@ -117,6 +120,8 @@ function initSearch() {
             id: i,
             title: docs[i].title,
             content: docs[i].content,
+            breadcrumb: docs[i].breadcrumb || '',
+            keywords: docs[i].keywords || '',
             {%- if site.search.rel_url != false %}
             relUrl: docs[i].relUrl
             {%- endif %}
@@ -254,6 +259,14 @@ function searchLoaded(index, docs) {
       var resultTitle = document.createElement('div');
       resultTitle.classList.add('search-result-title');
       resultLink.appendChild(resultTitle);
+
+      // Krestfield: show the product and section above the result title
+      if (doc.breadcrumb) {
+        var resultBreadcrumb = document.createElement('div');
+        resultBreadcrumb.classList.add('search-result-breadcrumb');
+        resultBreadcrumb.textContent = doc.breadcrumb;
+        resultTitle.appendChild(resultBreadcrumb);
+      }
 
       // note: the SVG svg-doc is only loaded as a Jekyll include if site.search_enabled is true; see _includes/icons/icons.html
       var resultDoc = document.createElement('div');
